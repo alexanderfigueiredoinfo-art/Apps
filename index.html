@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MercadoFácil — Organizador de Compras</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            soft: '0 2px 12px -2px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.04)',
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-24 md:pb-10 transition-colors duration-200 selection:bg-emerald-200 dark:selection:bg-emerald-900">
+
+  <!-- ==================== CABEÇALHO SUPERIOR ==================== -->
+  <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <!-- Logo & Título -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight text-slate-900 dark:text-white">MercadoFácil</h1>
+          <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-none">Organizador de Supermercado</p>
+        </div>
+      </div>
+
+      <!-- Navegação Desktop (Abas no topo) -->
+      <nav class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl gap-1" aria-label="Navegação principal">
+        <button data-tab="lista" onclick="switchTab('lista')" class="tab-btn-desktop px-4 py-1.5 rounded-lg text-sm font-semibold transition-all">
+          Lista Atual
+        </button>
+        <button data-tab="resumo" onclick="switchTab('resumo')" class="tab-btn-desktop px-4 py-1.5 rounded-lg text-sm font-semibold transition-all">
+          Resumo
+        </button>
+        <button data-tab="historico" onclick="switchTab('historico')" class="tab-btn-desktop px-4 py-1.5 rounded-lg text-sm font-semibold transition-all">
+          Histórico
+        </button>
+      </nav>
+
+      <!-- Ações do Cabeçalho -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="copyListToClipboard()" title="Copiar lista para WhatsApp" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 text-xs font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span class="hidden sm:inline">Copiar</span>
+        </button>
+
+        <button id="themeToggleBtn" onclick="toggleTheme()" title="Alternar tema claro/escuro" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <!-- Ícone Sol (visível no modo escuro) -->
+          <svg class="w-5 h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- Ícone Lua (visível no modo claro) -->
+          <svg class="w-5 h-5 block dark:hidden text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-5 space-y-5">
+
+    <!-- ==================== ABA 1: LISTA ATUAL ==================== -->
+    <section id="tab-lista" class="space-y-5">
+
+      <!-- 1. Painel de Controle Financeiro -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 shadow-soft border border-slate-200/70 dark:border-slate-800 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Painel Financeiro</span>
+            <span id="itemsCounterBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/60">
+              0/0 itens no carrinho
+            </span>
+          </div>
+          <span id="budgetStatusText" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            0% do orçamento
+          </span>
+        </div>
+
+        <!-- 3 Métricas Principais -->
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-4">
+          <!-- No Carrinho -->
+          <div class="bg-emerald-50/70 dark:bg-emerald-950/30 rounded-xl p-3 border border-emerald-100 dark:border-emerald-900/50">
+            <p class="text-[11px] sm:text-xs font-medium text-emerald-700 dark:text-emerald-400 mb-0.5">No Carrinho</p>
+            <p id="inCartTotalDisplay" class="text-base sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-300 truncate">R$ 0,00</p>
+          </div>
+
+          <!-- Estimativa Total -->
+          <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-3 border border-slate-200/60 dark:border-slate-700/60">
+            <p class="text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 mb-0.5">Estimativa Total</p>
+            <p id="estimatedTotalDisplay" class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 truncate">R$ 0,00</p>
+          </div>
+
+          <!-- Orçamento (Clicável para editar) -->
+          <button onclick="openBudgetModal()" title="Clique para alterar o orçamento" class="text-left bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl p-3 border border-slate-200/60 dark:border-slate-700/60 transition-colors group">
+            <div class="flex items-center justify-between gap-1 mb-0.5">
+              <p class="text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">Orçamento</p>
+              <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </div>
+            <p id="budgetDisplay" class="text-base sm:text-xl font-bold text-slate-800 dark:text-slate-100 truncate">R$ 500,00</p>
+          </button>
+        </div>
+
+        <!-- Barra de Progresso do Orçamento -->
+        <div class="space-y-1.5">
+          <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5">
+            <div id="budgetProgressBar" class="h-full rounded-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+            <span id="budgetRemainingText">Restam R$ 500,00 do orçamento</span>
+            <span>Baseado nos itens no carrinho</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Formulário de Adição Rápida (Expansível) -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-soft border border-slate-200/70 dark:border-slate-800 overflow-hidden">
+        <form id="quickAddForm" onsubmit="handleAddItem(event)" class="p-4 space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <input
+                type="text"
+                id="itemNameInput"
+                placeholder="Adicionar item (ex: Arroz 5kg, Leite...)"
+                required
+                autocomplete="off"
+                class="w-full pl-3.5 pr-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder-slate-400 dark:placeholder-slate-500"
+              />
+            </div>
+            <button
+              type="button"
+              id="toggleAddDetailsBtn"
+              onclick="toggleAddDetails()"
+              title="Mais detalhes (categoria, qtd, preço)"
+              class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shrink-0"
+            >
+              <svg id="toggleAddDetailsIcon" class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-sm font-semibold shadow-sm transition-all flex items-center gap-1.5 shrink-0"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span class="hidden sm:inline">Adicionar</span>
+            </button>
+          </div>
+
+          <!-- Campos Extras (Categoria, Qtd, Unidade, Preço) -->
+          <div id="addDetailsContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+            <!-- Categoria -->
+            <div class="col-span-2 sm:col-span-1">
+              <label for="itemCategoryInput" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Categoria</label>
+              <select id="itemCategoryInput" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <!-- Populado via JS -->
+              </select>
+            </div>
+
+            <!-- Quantidade -->
+            <div>
+              <label for="itemQtyInput" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Quantidade</label>
+              <input
+                type="number"
+                id="itemQtyInput"
+                value="1"
+                min="0.01"
+                step="any"
+                class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <!-- Unidade -->
+            <div>
+              <label for="itemUnitInput" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Unidade</label>
+              <select id="itemUnitInput" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="un">un</option>
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="L">L</option>
+                <option value="ml">ml</option>
+                <option value="pct">pct</option>
+                <option value="cx">cx</option>
+              </select>
+            </div>
+
+            <!-- Preço Unitário -->
+            <div class="col-span-2 sm:col-span-1">
+              <label for="itemPriceInput" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Preço Unit. (R$)</label>
+              <input
+                type="number"
+                id="itemPriceInput"
+                placeholder="0,00 (opcional)"
+                min="0"
+                step="0.01"
+                class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-slate-400"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- 3. Busca e Filtros -->
+      <div class="space-y-2.5">
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <!-- Busca -->
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              id="searchInput"
+              oninput="handleSearchChange(this.value)"
+              placeholder="Buscar item na lista..."
+              class="w-full pl-10 pr-8 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+            />
+            <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Filtro por Categoria -->
+          <select id="filterCategorySelect" onchange="handleCategoryFilterChange(this.value)" class="sm:w-52 px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+            <option value="all">Todas as categorias</option>
+            <!-- Populado via JS -->
+          </select>
+        </div>
+
+        <!-- Filtros Rápidos de Status + Ações Rápidas -->
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="inline-flex bg-slate-200/70 dark:bg-slate-800/80 p-1 rounded-xl gap-1">
+            <button onclick="setStatusFilter('all')" data-status="all" class="status-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+              Todos
+            </button>
+            <button onclick="setStatusFilter('pending')" data-status="pending" class="status-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+              Faltam
+            </button>
+            <button onclick="setStatusFilter('checked')" data-status="checked" class="status-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+              No Carrinho
+            </button>
+          </div>
+
+          <div id="listActionsBar" class="hidden flex items-center gap-2">
+            <button onclick="openFinishPurchaseModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Finalizar Compra
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Lista de Itens Agrupada por Categoria -->
+      <div id="shoppingListContainer" class="space-y-4">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+    </section>
+
+    <!-- ==================== ABA 2: RESUMO ==================== -->
+    <section id="tab-resumo" class="hidden space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white">Resumo da Compra</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Análise financeira detalhada da sua lista atual</p>
+        </div>
+
+        <!-- Seletor de base do resumo -->
+        <div class="inline-flex bg-slate-200/70 dark:bg-slate-800 p-1 rounded-xl gap-1">
+          <button onclick="setSummaryMode('all')" id="summaryModeAll" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+            Lista Completa
+          </button>
+          <button onclick="setSummaryMode('cart')" id="summaryModeCart" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+            Só no Carrinho
+          </button>
+        </div>
+      </div>
+
+      <!-- Indicadores (KPIs) -->
+      <div id="summaryKpisContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <!-- Renderizado via JS -->
+      </div>
+
+      <!-- Gráfico de Barras Horizontais por Categoria -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-soft border border-slate-200/70 dark:border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Gastos por Categoria</h3>
+          <span id="summaryTotalBadge" class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">R$ 0,00</span>
+        </div>
+        <div id="categoryChartContainer" class="space-y-3.5">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ABA 3: HISTÓRICO ==================== -->
+    <section id="tab-historico" class="hidden space-y-5">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white">Histórico de Compras</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Acompanhe gastos anteriores e reutilize listas rapidamente</p>
+        </div>
+        <span id="historyCountBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          0 compras
+        </span>
+      </div>
+
+      <div id="historyListContainer" class="space-y-3">
+        <!-- Renderizado via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== NAVEGAÇÃO INFERIOR (MOBILE) ==================== -->
+  <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-2 pb-safe" aria-label="Navegação mobile">
+    <div class="grid grid-cols-3 h-16 max-w-md mx-auto">
+      <button data-tab="lista" onclick="switchTab('lista')" class="tab-btn-mobile flex flex-col items-center justify-center gap-1 text-xs font-semibold transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        <span>Lista Atual</span>
+      </button>
+
+      <button data-tab="resumo" onclick="switchTab('resumo')" class="tab-btn-mobile flex flex-col items-center justify-center gap-1 text-xs font-semibold transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span>Resumo</span>
+      </button>
+
+      <button data-tab="historico" onclick="switchTab('historico')" class="tab-btn-mobile flex flex-col items-center justify-center gap-1 text-xs font-semibold transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Histórico</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== MODAIS ==================== -->
+
+  <!-- Modal: Editar Orçamento -->
+  <div id="budgetModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-5 shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">Definir Orçamento</h3>
+        <button onclick="closeModal('budgetModal')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <form onsubmit="saveBudget(event)" class="space-y-4">
+        <div>
+          <label for="budgetInput" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">Valor limite da compra (R$)</label>
+          <input type="number" id="budgetInput" min="1" step="0.01" required class="w-full px-3.5 py-2.5 text-base font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div class="flex gap-2 justify-end">
+          <button type="button" onclick="closeModal('budgetModal')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancelar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Item -->
+  <div id="editItemModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">Editar Item</h3>
+        <button onclick="closeModal('editItemModal')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <form onsubmit="saveEditedItem(event)" class="space-y-3.5">
+        <input type="hidden" id="editItemId" />
+        <div>
+          <label for="editItemName" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Nome do Item</label>
+          <input type="text" id="editItemName" required class="w-full px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div>
+          <label for="editItemCategory" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Categoria</label>
+          <select id="editItemCategory" class="w-full px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <!-- Populado via JS -->
+          </select>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label for="editItemQty" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Qtd</label>
+            <input type="number" id="editItemQty" min="0.01" step="any" required class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label for="editItemUnit" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Unidade</label>
+            <select id="editItemUnit" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="un">un</option>
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="L">L</option>
+              <option value="ml">ml</option>
+              <option value="pct">pct</option>
+              <option value="cx">cx</option>
+            </select>
+          </div>
+          <div>
+            <label for="editItemPrice" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Preço (R$)</label>
+            <input type="number" id="editItemPrice" min="0" step="0.01" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+        </div>
+        <div class="flex gap-2 justify-end pt-2">
+          <button type="button" onclick="closeModal('editItemModal')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancelar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Finalizar Compra -->
+  <div id="finishPurchaseModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">Finalizar Compra</h3>
+        <button onclick="closeModal('finishPurchaseModal')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <div id="finishSummaryBox" class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/70 dark:border-emerald-800/50 rounded-xl p-3.5 text-sm">
+        <!-- Populado via JS -->
+      </div>
+
+      <form onsubmit="confirmFinishPurchase(event)" class="space-y-3.5">
+        <div>
+          <label for="finishStoreName" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Nome do Supermercado (opcional)</label>
+          <input type="text" id="finishStoreName" placeholder="Ex: Atacadão, Carrefour, Mercado do Bairro..." class="w-full px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div>
+          <label for="finishDate" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Data da Compra</label>
+          <input type="date" id="finishDate" required class="w-full px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Após salvar no histórico:</p>
+          <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60">
+            <input type="radio" name="postFinishAction" value="keepUnchecked" checked class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" />
+            <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">Manter itens não marcados na lista</span>
+          </label>
+          <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60">
+            <input type="radio" name="postFinishAction" value="clearAll" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" />
+            <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200">Limpar toda a lista atual</span>
+          </label>
+        </div>
+
+        <div class="flex gap-2 justify-end pt-2">
+          <button type="button" onclick="closeModal('finishPurchaseModal')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancelar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white">Salvar no Histórico</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmação Genérica (substitui confirm()) -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-5 shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <h3 id="confirmModalTitle" class="text-base font-bold text-slate-900 dark:text-white">Confirmar ação</h3>
+      <p id="confirmModalMessage" class="text-sm text-slate-600 dark:text-slate-300"></p>
+      <div class="flex gap-2 justify-end pt-1">
+        <button onclick="closeModal('confirmModal')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancelar</button>
+        <button id="confirmModalActionBtn" class="px-4 py-2 rounded-xl text-sm font-semibold bg-rose-600 hover:bg-rose-700 text-white">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificações -->
+  <div id="toastContainer" class="fixed top-20 right-4 left-4 sm:left-auto z-50 flex flex-col items-center sm:items-end gap-2 pointer-events-none"></div>
+
+  <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
+  <script>
+    /**
+     * Configurações e Categorias Padrão
+     */
+    const STORAGE_KEY = 'mercadofacil_state_v1';
+
+    const CATEGORIES = [
+      { id: 'Hortifruti', name: 'Hortifruti', icon: '🥬', color: 'bg-green-500', badge: 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300' },
+      { id: 'Açougue & Peixaria', name: 'Açougue & Peixaria', icon: '🥩', color: 'bg-rose-500', badge: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' },
+      { id: 'Laticínios & Frios', name: 'Laticínios & Frios', icon: '🧀', color: 'bg-amber-400', badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' },
+      { id: 'Padaria', name: 'Padaria', icon: '🥖', color: 'bg-orange-400', badge: 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300' },
+      { id: 'Mercearia', name: 'Mercearia', icon: '🛒', color: 'bg-emerald-500', badge: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' },
+      { id: 'Bebidas', name: 'Bebidas', icon: '🥤', color: 'bg-sky-500', badge: 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300' },
+      { id: 'Limpeza', name: 'Limpeza', icon: '🧹', color: 'bg-cyan-500', badge: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300' },
+      { id: 'Higiene', name: 'Higiene', icon: '🧴', color: 'bg-violet-500', badge: 'bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300' },
+      { id: 'Outros', name: 'Outros', icon: '📦', color: 'bg-slate-500', badge: 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300' },
+    ];
+
+    /**
+     * Estado Global da Aplicação
+     */
+    let state = {
+      items: [],
+      budget: 500,
+      history: [],
+      theme: 'light'
+    };
+
+    // Estado de Interface (não persistido)
+    let ui = {
+      activeTab: 'lista',
+      searchQuery: '',
+      statusFilter: 'all', // 'all' | 'pending' | 'checked'
+      categoryFilter: 'all',
+      summaryMode: 'all',  // 'all' | 'cart'
+      expandedHistoryIds: new Set(),
+      showAddDetails: true
+    };
+
+    /**
+     * Formatação de Moeda (BRL) e Números
+     */
+    const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+
+    function formatBRL(value) {
+      const num = Number(value) || 0;
+      return currencyFormatter.format(num);
+    }
+
+    function formatQty(value) {
+      const num = Number(value) || 0;
+      return Number.isInteger(num) ? String(num) : num.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+    }
+
+    function formatDateBR(isoDate) {
+      if (!isoDate) return '';
+      const parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getCategoryMeta(catId) {
+      return CATEGORIES.find(c => c.id === catId) || CATEGORIES[CATEGORIES.length - 1];
+    }
+
+    /**
+     * Persistência no localStorage com tratamento de erros
+     */
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.items = Array.isArray(parsed.items) ? parsed.items : [];
+          state.budget = typeof parsed.budget === 'number' && parsed.budget > 0 ? parsed.budget : 500;
+          state.history = Array.isArray(parsed.history) ? parsed.history : [];
+          state.theme = parsed.theme === 'dark' ? 'dark' : 'light';
+        } else {
+          // Detecta preferência inicial do sistema
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            state.theme = 'dark';
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao carregar dados do localStorage:', err);
+      }
+      applyTheme();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (err) {
+        console.error('Erro ao salvar dados no localStorage:', err);
+        showToast('Não foi possível salvar no armazenamento local.', 'error');
+      }
+    }
+
+    /**
+     * Tema Claro / Escuro
+     */
+    function applyTheme() {
+      const htmlEl = document.documentElement;
+      if (state.theme === 'dark') {
+        htmlEl.classList.add('dark');
+      } else {
+        htmlEl.classList.remove('dark');
+      }
+    }
+
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+      saveState();
+    }
+
+    /**
+     * Navegação por Abas
+     */
+    function switchTab(tabName) {
+      ui.activeTab = tabName;
+
+      // Alterna seções
+      ['lista', 'resumo', 'historico'].forEach(t => {
+        const section = document.getElementById(`tab-${t}`);
+        if (section) {
+          section.classList.toggle('hidden', t !== tabName);
+        }
+      });
+
+      // Atualiza estilos Desktop
+      document.querySelectorAll('.tab-btn-desktop').forEach(btn => {
+        const isActive = btn.dataset.tab === tabName;
+        btn.className = isActive
+          ? 'tab-btn-desktop px-4 py-1.5 rounded-lg text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
+          : 'tab-btn-desktop px-4 py-1.5 rounded-lg text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200';
+      });
+
+      // Atualiza estilos Mobile
+      document.querySelectorAll('.tab-btn-mobile').forEach(btn => {
+        const isActive = btn.dataset.tab === tabName;
+        btn.className = isActive
+          ? 'tab-btn-mobile flex flex-col items-center justify-center gap-1 text-xs font-bold transition-colors text-emerald-600 dark:text-emerald-400'
+          : 'tab-btn-mobile flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors text-slate-500 dark:text-slate-400';
+      });
+
+      renderCurrentTab();
+    }
+
+    function renderCurrentTab() {
+      if (ui.activeTab === 'lista') {
+        renderFinancialPanel();
+        renderShoppingList();
+      } else if (ui.activeTab === 'resumo') {
+        renderSummary();
+      } else if (ui.activeTab === 'historico') {
+        renderHistory();
+      }
+    }
+
+    /**
+     * Popula selects de categorias
+     */
+    function populateCategorySelects() {
+      const addSelect = document.getElementById('itemCategoryInput');
+      const editSelect = document.getElementById('editItemCategory');
+      const filterSelect = document.getElementById('filterCategorySelect');
+
+      const optionsHtml = CATEGORIES.map(c =>
+        `<option value="${c.id}">${c.icon} ${c.name}</option>`
+      ).join('');
+
+      addSelect.innerHTML = optionsHtml;
+      addSelect.value = 'Mercearia';
+      editSelect.innerHTML = optionsHtml;
+      filterSelect.innerHTML = `<option value="all">Todas as categorias</option>` + optionsHtml;
+    }
+
+    /**
+     * Formulário de Adição Rápida
+     */
+    function toggleAddDetails() {
+      ui.showAddDetails = !ui.showAddDetails;
+      const container = document.getElementById('addDetailsContainer');
+      const btn = document.getElementById('toggleAddDetailsBtn');
+      container.classList.toggle('hidden', !ui.showAddDetails);
+      btn.classList.toggle('bg-emerald-100', ui.showAddDetails);
+      btn.classList.toggle('text-emerald-700', ui.showAddDetails);
+      btn.classList.toggle('dark:bg-emerald-950', ui.showAddDetails);
+      btn.classList.toggle('dark:text-emerald-300', ui.showAddDetails);
+    }
+
+    function handleAddItem(event) {
+      event.preventDefault();
+      const nameInput = document.getElementById('itemNameInput');
+      const categoryInput = document.getElementById('itemCategoryInput');
+      const qtyInput = document.getElementById('itemQtyInput');
+      const unitInput = document.getElementById('itemUnitInput');
+      const priceInput = document.getElementById('itemPriceInput');
+
+      const name = nameInput.value.trim();
+      if (!name) return;
+
+      const quantity = Math.max(0.01, parseFloat(qtyInput.value) || 1);
+      const unitPrice = Math.max(0, parseFloat(priceInput.value) || 0);
+
+      const newItem = {
+        id: generateId(),
+        name,
+        category: categoryInput.value || 'Outros',
+        quantity,
+        unit: unitInput.value || 'un',
+        unitPrice,
+        checked: false,
+        createdAt: Date.now()
+      };
+
+      state.items.unshift(newItem);
+      saveState();
+
+      // Reset parcial mantendo categoria para agilizar inserção
+      nameInput.value = '';
+      qtyInput.value = '1';
+      priceInput.value = '';
+      nameInput.focus();
+
+      renderFinancialPanel();
+      renderShoppingList();
+      showToast(`"${name}" adicionado à lista!`);
+    }
+
+    /**
+     * Ações nos Itens da Lista
+     */
+    function toggleItemChecked(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+      item.checked = !item.checked;
+      saveState();
+      renderFinancialPanel();
+      renderShoppingList();
+    }
+
+    function updateItemQuantity(id, delta) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+
+      // Passo inteligente para unidades fracionadas
+      const step = (item.unit === 'kg' || item.unit === 'L') ? 0.5 : 1;
+      const newQty = Math.round((item.quantity + delta * step) * 100) / 100;
+
+      if (newQty <= 0) {
+        return; // Mantém mínimo positivo; para excluir usa botão excluir
+      }
+
+      item.quantity = newQty;
+      saveState();
+      renderFinancialPanel();
+      renderShoppingList();
+    }
+
+    function updateItemPriceInline(id, rawValue) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+
+      const parsed = parseFloat(String(rawValue).replace(',', '.'));
+      item.unitPrice = (!isNaN(parsed) && parsed >= 0) ? parsed : 0;
+      saveState();
+
+      // Atualiza subtotal do item sem perder o foco do input
+      const subtotalEl = document.getElementById(`subtotal-${id}`);
+      if (subtotalEl) {
+        subtotalEl.textContent = formatBRL(item.quantity * item.unitPrice);
+      }
+
+      // Atualiza subtotal da categoria
+      updateCategorySubtotalDOM(item.category);
+      renderFinancialPanel();
+    }
+
+    function updateCategorySubtotalDOM(categoryName) {
+      const catItems = state.items.filter(i => i.category === categoryName);
+      const catTotal = catItems.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+      const el = document.getElementById(`cat-subtotal-${CSS.escape(categoryName)}`);
+      if (el) {
+        el.textContent = formatBRL(catTotal);
+      }
+    }
+
+    function deleteItem(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+      state.items = state.items.filter(i => i.id !== id);
+      saveState();
+      renderFinancialPanel();
+      renderShoppingList();
+      showToast(`"${item.name}" removido.`);
+    }
+
+    /**
+     * Modal: Editar Item
+     */
+    function openEditItemModal(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('editItemId').value = item.id;
+      document.getElementById('editItemName').value = item.name;
+      document.getElementById('editItemCategory').value = item.category;
+      document.getElementById('editItemQty').value = item.quantity;
+      document.getElementById('editItemUnit').value = item.unit;
+      document.getElementById('editItemPrice').value = item.unitPrice > 0 ? item.unitPrice : '';
+
+      openModal('editItemModal');
+    }
+
+    function saveEditedItem(event) {
+      event.preventDefault();
+      const id = document.getElementById('editItemId').value;
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+
+      item.name = document.getElementById('editItemName').value.trim() || item.name;
+      item.category = document.getElementById('editItemCategory').value;
+      item.quantity = Math.max(0.01, parseFloat(document.getElementById('editItemQty').value) || 1);
+      item.unit = document.getElementById('editItemUnit').value;
+      item.unitPrice = Math.max(0, parseFloat(document.getElementById('editItemPrice').value) || 0);
+
+      saveState();
+      closeModal('editItemModal');
+      renderFinancialPanel();
+      renderShoppingList();
+      showToast('Item atualizado com sucesso!');
+    }
+
+    /**
+     * Modal: Orçamento
+     */
+    function openBudgetModal() {
+      document.getElementById('budgetInput').value = state.budget;
+      openModal('budgetModal');
+      setTimeout(() => document.getElementById('budgetInput').select(), 50);
+    }
+
+    function saveBudget(event) {
+      event.preventDefault();
+      const val = parseFloat(document.getElementById('budgetInput').value);
+      if (isNaN(val) || val <= 0) return;
+
+      state.budget = val;
+      saveState();
+      closeModal('budgetModal');
+      renderFinancialPanel();
+      showToast(`Orçamento atualizado para ${formatBRL(val)}`);
+    }
+
+    /**
+     * Filtros e Busca
+     */
+    function handleSearchChange(val) {
+      ui.searchQuery = val.trim().toLowerCase();
+      document.getElementById('clearSearchBtn').classList.toggle('hidden', !ui.searchQuery);
+      renderShoppingList();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      handleSearchChange('');
+      input.focus();
+    }
+
+    function setStatusFilter(status) {
+      ui.statusFilter = status;
+      updateStatusFilterButtons();
+      renderShoppingList();
+    }
+
+    function updateStatusFilterButtons() {
+      document.querySelectorAll('.status-filter-btn').forEach(btn => {
+        const isActive = btn.dataset.status === ui.statusFilter;
+        btn.className = isActive
+          ? 'status-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
+          : 'status-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200';
+      });
+    }
+
+    function handleCategoryFilterChange(val) {
+      ui.categoryFilter = val;
+      renderShoppingList();
+    }
+
+    /**
+     * Renderização: Painel Financeiro
+     */
+    function renderFinancialPanel() {
+      const totalItems = state.items.length;
+      const checkedItems = state.items.filter(i => i.checked);
+      const inCartCount = checkedItems.length;
+
+      const inCartTotal = checkedItems.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+      const estimatedTotal = state.items.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+
+      document.getElementById('itemsCounterBadge').textContent = `${inCartCount}/${totalItems} ${totalItems === 1 ? 'item' : 'itens'} no carrinho`;
+      document.getElementById('inCartTotalDisplay').textContent = formatBRL(inCartTotal);
+      document.getElementById('estimatedTotalDisplay').textContent = formatBRL(estimatedTotal);
+      document.getElementById('budgetDisplay').textContent = formatBRL(state.budget);
+
+      // Cálculo de progresso do orçamento
+      const pct = state.budget > 0 ? (inCartTotal / state.budget) * 100 : 0;
+      const clampedPct = Math.min(pct, 100);
+      const bar = document.getElementById('budgetProgressBar');
+      const statusText = document.getElementById('budgetStatusText');
+      const remainingText = document.getElementById('budgetRemainingText');
+
+      bar.style.width = `${clampedPct}%`;
+
+      // Cores dinâmicas: Verde -> Âmbar (>80%) -> Vermelho (>100%)
+      bar.classList.remove('bg-emerald-500', 'bg-amber-500', 'bg-rose-500');
+      statusText.classList.remove('text-emerald-600', 'dark:text-emerald-400', 'text-amber-600', 'dark:text-amber-400', 'text-rose-600', 'dark:text-rose-400');
+
+      if (pct > 100) {
+        bar.classList.add('bg-rose-500');
+        statusText.classList.add('text-rose-600', 'dark:text-rose-400');
+        statusText.textContent = `${Math.round(pct)}% — Limite excedido!`;
+        remainingText.textContent = `Ultrapassou ${formatBRL(inCartTotal - state.budget)} do orçamento`;
+      } else if (pct >= 80) {
+        bar.classList.add('bg-amber-500');
+        statusText.classList.add('text-amber-600', 'dark:text-amber-400');
+        statusText.textContent = `${Math.round(pct)}% — Atenção ao limite`;
+        remainingText.textContent = `Restam ${formatBRL(state.budget - inCartTotal)} do orçamento`;
+      } else {
+        bar.classList.add('bg-emerald-500');
+        statusText.classList.add('text-emerald-600', 'dark:text-emerald-400');
+        statusText.textContent = `${Math.round(pct)}% do orçamento`;
+        remainingText.textContent = `Restam ${formatBRL(state.budget - inCartTotal)} do orçamento`;
+      }
+
+      // Mostra/oculta botão de finalizar compra
+      document.getElementById('listActionsBar').classList.toggle('hidden', totalItems === 0);
+    }
+
+    /**
+     * Renderização: Lista de Compras Agrupada por Categoria
+     */
+    function renderShoppingList() {
+      const container = document.getElementById('shoppingListContainer');
+
+      // Estado Vazio Total (oferece botão Carregar Exemplo)
+      if (state.items.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-8 sm:p-10 text-center border border-dashed border-slate-300 dark:border-slate-700 space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-3xl">
+              🛒
+            </div>
+            <div class="space-y-1 max-w-sm mx-auto">
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">Sua lista está vazia</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Adicione itens usando o campo acima ou carregue uma lista de exemplo para testar o app agora mesmo.</p>
+            </div>
+            <div class="pt-1">
+              <button onclick="loadSampleData()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm transition-all active:scale-[0.98]">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Carregar Exemplo
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Filtragem
+      const filtered = state.items.filter(item => {
+        if (ui.searchQuery && !item.name.toLowerCase().includes(ui.searchQuery)) return false;
+        if (ui.statusFilter === 'pending' && item.checked) return false;
+        if (ui.statusFilter === 'checked' && !item.checked) return false;
+        if (ui.categoryFilter !== 'all' && item.category !== ui.categoryFilter) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-800 space-y-2">
+            <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">Nenhum item encontrado com esses filtros.</p>
+            <button onclick="resetFilters()" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">Limpar filtros</button>
+          </div>
+        `;
+        return;
+      }
+
+      // Agrupa por categoria respeitando a ordem padrão de CATEGORIES
+      const htmlBlocks = [];
+
+      CATEGORIES.forEach(cat => {
+        const catItems = filtered.filter(i => i.category === cat.id);
+        if (catItems.length === 0) return;
+
+        // Ordena: não marcados primeiro, marcados por último
+        catItems.sort((a, b) => Number(a.checked) - Number(b.checked));
+
+        const catSubtotal = catItems.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+        const checkedInCat = catItems.filter(i => i.checked).length;
+
+        const itemsHtml = catItems.map(item => {
+          const subtotal = item.quantity * item.unitPrice;
+          const isChecked = item.checked;
+
+          return `
+            <div class="p-3 sm:px-4 sm:py-3.5 flex flex-col sm:flex-row sm:items-center gap-3 transition-colors ${isChecked ? 'bg-slate-50/80 dark:bg-slate-800/30' : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'}">
+              <!-- Linha Principal: Checkbox + Nome -->
+              <div class="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+                <button
+                  type="button"
+                  onclick="toggleItemChecked('${item.id}')"
+                  aria-label="${isChecked ? 'Desmarcar item' : 'Marcar como no carrinho'}"
+                  class="mt-0.5 sm:mt-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all ${
+                    isChecked
+                      ? 'bg-emerald-600 border-emerald-600 text-white'
+                      : 'border-slate-300 dark:border-slate-600 hover:border-emerald-500 bg-white dark:bg-slate-900'
+                  }"
+                >
+                  ${isChecked ? `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>` : ''}
+                </button>
+
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold break-words leading-snug transition-colors ${
+                    isChecked ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
+                  }">
+                    ${escapeHTML(item.name)}
+                  </p>
+                  <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 sm:hidden">
+                    Subtotal: <span class="font-bold text-slate-600 dark:text-slate-300">${formatBRL(subtotal)}</span>
+                  </p>
+                </div>
+
+                <!-- Botões Editar / Excluir no Mobile (canto superior direito) -->
+                <div class="flex items-center gap-1 sm:hidden shrink-0">
+                  <button onclick="openEditItemModal('${item.id}')" title="Editar" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                  </button>
+                  <button onclick="deleteItem('${item.id}')" title="Excluir" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Controles: Quantidade, Preço Inline, Subtotal e Ações Desktop -->
+              <div class="flex items-center justify-between sm:justify-end gap-2.5 pl-9 sm:pl-0">
+                <!-- Controle de Quantidade (- / +) -->
+                <div class="inline-flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200/70 dark:border-slate-700/70">
+                  <button type="button" onclick="updateItemQuantity('${item.id}', -1)" class="w-8 h-8 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-600 font-bold text-base rounded-l-xl active:bg-slate-200 dark:active:bg-slate-700">−</button>
+                  <span class="px-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 min-w-[3.2rem] text-center select-none">
+                    ${formatQty(item.quantity)} <span class="font-medium text-slate-400">${escapeHTML(item.unit)}</span>
+                  </span>
+                  <button type="button" onclick="updateItemQuantity('${item.id}', 1)" class="w-8 h-8 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-600 font-bold text-base rounded-r-xl active:bg-slate-200 dark:active:bg-slate-700">+</button>
+                </div>
+
+                <!-- Campo Inline de Preço Unitário -->
+                <div class="relative w-24 sm:w-28">
+                  <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-slate-400 pointer-events-none">R$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="${item.unitPrice > 0 ? item.unitPrice.toFixed(2) : ''}"
+                    placeholder="0,00"
+                    aria-label="Preço unitário de ${escapeHTML(item.name)}"
+                    oninput="updateItemPriceInline('${item.id}', this.value)"
+                    class="w-full pl-7 pr-2 py-1.5 text-xs sm:text-sm font-semibold text-right bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-slate-300 dark:placeholder-slate-600"
+                  />
+                </div>
+
+                <!-- Subtotal Desktop -->
+                <div class="hidden sm:block w-24 text-right">
+                  <span id="subtotal-${item.id}" class="text-sm font-bold ${isChecked ? 'text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}">
+                    ${formatBRL(subtotal)}
+                  </span>
+                </div>
+
+                <!-- Ações Desktop -->
+                <div class="hidden sm:flex items-center gap-0.5">
+                  <button onclick="openEditItemModal('${item.id}')" title="Editar item" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                  </button>
+                  <button onclick="deleteItem('${item.id}')" title="Excluir item" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        htmlBlocks.push(`
+          <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-soft border border-slate-200/70 dark:border-slate-800 overflow-hidden">
+            <!-- Cabeçalho da Categoria -->
+            <div class="px-4 py-3 bg-slate-50/90 dark:bg-slate-800/50 border-b border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="text-base shrink-0">${cat.icon}</span>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">${cat.name}</h3>
+                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full ${cat.badge} shrink-0">
+                  ${checkedInCat}/${catItems.length}
+                </span>
+              </div>
+              <span id="cat-subtotal-${cat.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 shrink-0">
+                ${formatBRL(catSubtotal)}
+              </span>
+            </div>
+
+            <!-- Lista de Itens -->
+            <div class="divide-y divide-slate-100 dark:divide-slate-800/80">
+              ${itemsHtml}
+            </div>
+          </div>
+        `);
+      });
+
+      container.innerHTML = htmlBlocks.join('');
+    }
+
+    function resetFilters() {
+      ui.searchQuery = '';
+      ui.statusFilter = 'all';
+      ui.categoryFilter = 'all';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      document.getElementById('filterCategorySelect').value = 'all';
+      updateStatusFilterButtons();
+      renderShoppingList();
+    }
+
+    /**
+     * Carregar Lista de Exemplo (Realista PT-BR)
+     */
+    function loadSampleData() {
+      const sample = [
+        { name: 'Banana Prata', category: 'Hortifruti', quantity: 1.5, unit: 'kg', unitPrice: 6.99, checked: true },
+        { name: 'Tomate Italiano', category: 'Hortifruti', quantity: 1, unit: 'kg', unitPrice: 8.49, checked: true },
+        { name: 'Alface Crespa', category: 'Hortifruti', quantity: 1, unit: 'un', unitPrice: 4.50, checked: false },
+        { name: 'Peito de Frango (Filé)', category: 'Açougue & Peixaria', quantity: 1, unit: 'kg', unitPrice: 22.90, checked: true },
+        { name: 'Carne Moída Patinho', category: 'Açougue & Peixaria', quantity: 1, unit: 'kg', unitPrice: 38.90, checked: false },
+        { name: 'Leite Integral 1L', category: 'Laticínios & Frios', quantity: 4, unit: 'L', unitPrice: 5.49, checked: true },
+        { name: 'Queijo Mussarela Fatiado', category: 'Laticínios & Frios', quantity: 1, unit: 'pct', unitPrice: 16.90, checked: false },
+        { name: 'Pão Francês', category: 'Padaria', quantity: 8, unit: 'un', unitPrice: 0.90, checked: false },
+        { name: 'Arroz Branco Tipo 1 (5kg)', category: 'Mercearia', quantity: 1, unit: 'pct', unitPrice: 29.90, checked: true },
+        { name: 'Feijão Carioca (1kg)', category: 'Mercearia', quantity: 2, unit: 'pct', unitPrice: 8.79, checked: false },
+        { name: 'Café Torrado e Moído 500g', category: 'Mercearia', quantity: 1, unit: 'pct', unitPrice: 19.50, checked: false },
+        { name: 'Suco de Laranja Integral', category: 'Bebidas', quantity: 1, unit: 'L', unitPrice: 11.90, checked: false },
+        { name: 'Detergente Líquido', category: 'Limpeza', quantity: 2, unit: 'un', unitPrice: 2.89, checked: true },
+        { name: 'Creme Dental', category: 'Higiene', quantity: 2, unit: 'un', unitPrice: 5.99, checked: false }
+      ];
+
+      state.items = sample.map((item, idx) => ({
+        ...item,
+        id: generateId() + idx,
+        createdAt: Date.now() - idx * 1000
+      }));
+
+      saveState();
+      renderFinancialPanel();
+      renderShoppingList();
+      showToast('Lista de exemplo carregada!');
+    }
+
+    /**
+     * Copiar Lista Formatada para WhatsApp
+     */
+    function copyListToClipboard() {
+      if (state.items.length === 0) {
+        showToast('A lista está vazia para copiar.', 'info');
+        return;
+      }
+
+      const lines = ['🛒 *Lista de Supermercado — MercadoFácil*', ''];
+      let totalGeral = 0;
+
+      CATEGORIES.forEach(cat => {
+        const catItems = state.items.filter(i => i.category === cat.id);
+        if (catItems.length === 0) return;
+
+        lines.push(`${cat.icon} *${cat.name}*`);
+        catItems.forEach(item => {
+          const checkMark = item.checked ? '✅' : '⬜';
+          const subtotal = item.quantity * item.unitPrice;
+          totalGeral += subtotal;
+          const priceStr = item.unitPrice > 0 ? ` — ${formatBRL(subtotal)}` : '';
+          lines.push(`${checkMark} ${item.name} (${formatQty(item.quantity)} ${item.unit})${priceStr}`);
+        });
+        lines.push('');
+      });
+
+      lines.push(`💰 *Estimativa Total:* ${formatBRL(totalGeral)}`);
+
+      const textToCopy = lines.join('\n');
+
+      // Usa textarea + execCommand('copy') para máxima compatibilidade em iframes
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const success = document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        if (success) {
+          showToast('Lista copiada! Pronta para colar no WhatsApp.');
+        } else {
+          showToast('Não foi possível copiar automaticamente.', 'error');
+        }
+      } catch (err) {
+        console.error('Erro ao copiar:', err);
+        showToast('Erro ao copiar a lista.', 'error');
+      }
+    }
+
+    /**
+     * Finalizar Compra & Salvar no Histórico
+     */
+    function openFinishPurchaseModal() {
+      const checkedItems = state.items.filter(i => i.checked);
+      const itemsToSave = checkedItems.length > 0 ? checkedItems : state.items;
+      const total = itemsToSave.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+
+      const summaryBox = document.getElementById('finishSummaryBox');
+      if (checkedItems.length > 0) {
+        summaryBox.innerHTML = `
+          <p class="font-semibold text-emerald-800 dark:text-emerald-300">
+            Serão salvos <strong>${checkedItems.length} ${checkedItems.length === 1 ? 'item marcado' : 'itens marcados'}</strong> no carrinho.
+          </p>
+          <p class="text-xs text-emerald-700 dark:text-emerald-400 mt-1">
+            Valor total da compra: <strong>${formatBRL(total)}</strong>
+          </p>
+        `;
+      } else {
+        summaryBox.innerHTML = `
+          <p class="font-semibold text-amber-800 dark:text-amber-300">
+            Nenhum item foi marcado no carrinho. Todos os <strong>${state.items.length} itens</strong> da lista serão salvos.
+          </p>
+          <p class="text-xs text-amber-700 dark:text-amber-400 mt-1">
+            Valor total estimado: <strong>${formatBRL(total)}</strong>
+          </p>
+        `;
+      }
+
+      // Define data de hoje como padrão
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      document.getElementById('finishDate').value = `${yyyy}-${mm}-${dd}`;
+      document.getElementById('finishStoreName').value = '';
+
+      openModal('finishPurchaseModal');
+    }
+
+    function confirmFinishPurchase(event) {
+      event.preventDefault();
+      const storeName = document.getElementById('finishStoreName').value.trim() || 'Supermercado';
+      const date = document.getElementById('finishDate').value;
+      const postAction = document.querySelector('input[name="postFinishAction"]:checked').value;
+
+      const checkedItems = state.items.filter(i => i.checked);
+      const purchasedItems = (checkedItems.length > 0 ? checkedItems : state.items).map(i => ({
+        name: i.name,
+        category: i.category,
+        quantity: i.quantity,
+        unit: i.unit,
+        unitPrice: i.unitPrice
+      }));
+
+      const totalSpent = purchasedItems.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+
+      const historyEntry = {
+        id: generateId(),
+        storeName,
+        date,
+        totalSpent,
+        itemCount: purchasedItems.length,
+        items: purchasedItems
+      };
+
+      state.history.unshift(historyEntry);
+
+      if (postAction === 'clearAll') {
+        state.items = [];
+      } else {
+        // Mantém apenas os itens não marcados (ou limpa tudo se nenhum estava marcado)
+        state.items = checkedItems.length > 0 ? state.items.filter(i => !i.checked) : [];
+      }
+
+      saveState();
+      closeModal('finishPurchaseModal');
+      showToast('Compra salva no histórico!');
+      switchTab('historico');
+    }
+
+    /**
+     * ==================== ABA 2: RESUMO ====================
+     */
+    function setSummaryMode(mode) {
+      ui.summaryMode = mode;
+      renderSummary();
+    }
+
+    function renderSummary() {
+      // Atualiza botões de modo
+      const btnAll = document.getElementById('summaryModeAll');
+      const btnCart = document.getElementById('summaryModeCart');
+
+      btnAll.className = ui.summaryMode === 'all'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
+        : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400';
+
+      btnCart.className = ui.summaryMode === 'cart'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
+        : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400';
+
+      const targetItems = ui.summaryMode === 'cart'
+        ? state.items.filter(i => i.checked)
+        : state.items;
+
+      const kpisContainer = document.getElementById('summaryKpisContainer');
+      const chartContainer = document.getElementById('categoryChartContainer');
+      const totalBadge = document.getElementById('summaryTotalBadge');
+
+      const totalSpent = targetItems.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+      totalBadge.textContent = formatBRL(totalSpent);
+
+      if (targetItems.length === 0) {
+        kpisContainer.innerHTML = '';
+        chartContainer.innerHTML = `
+          <div class="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+            ${ui.summaryMode === 'cart' ? 'Nenhum item marcado no carrinho ainda.' : 'Adicione itens na sua lista para visualizar o resumo financeiro.'}
+          </div>
+        `;
+        return;
+      }
+
+      // Agrupa gastos por categoria
+      const catTotals = {};
+      targetItems.forEach(item => {
+        const sub = item.quantity * item.unitPrice;
+        catTotals[item.category] = (catTotals[item.category] || 0) + sub;
+      });
+
+      const sortedCategories = Object.entries(catTotals)
+        .map(([category, amount]) => ({ category, amount }))
+        .sort((a, b) => b.amount - a.amount);
+
+      // Indicador 1: Item mais caro (por subtotal)
+      const mostExpensiveItem = [...targetItems].sort((a, b) => (b.quantity * b.unitPrice) - (a.quantity * a.unitPrice))[0];
+      const mostExpensiveSub = mostExpensiveItem ? mostExpensiveItem.quantity * mostExpensiveItem.unitPrice : 0;
+
+      // Indicador 2: Categoria com maior gasto
+      const topCategory = sortedCategories[0];
+      const topCatMeta = topCategory ? getCategoryMeta(topCategory.category) : null;
+
+      // Indicador 3: Ticket médio por item
+      const avgTicket = targetItems.length > 0 ? totalSpent / targetItems.length : 0;
+
+      kpisContainer.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-soft border border-slate-200/70 dark:border-slate-800">
+          <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Item Mais Caro</p>
+          <p class="text-sm font-bold text-slate-900 dark:text-white truncate">${mostExpensiveSub > 0 ? escapeHTML(mostExpensiveItem.name) : 'Sem preço'}</p>
+          <p class="text-base font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${formatBRL(mostExpensiveSub)}</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-soft border border-slate-200/70 dark:border-slate-800">
+          <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Maior Categoria</p>
+          <p class="text-sm font-bold text-slate-900 dark:text-white truncate">${topCatMeta && topCategory.amount > 0 ? `${topCatMeta.icon} ${topCatMeta.name}` : 'Sem dados'}</p>
+          <p class="text-base font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${topCategory ? formatBRL(topCategory.amount) : 'R$ 0,00'}</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-soft border border-slate-200/70 dark:border-slate-800">
+          <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Ticket Médio / Item</p>
+          <p class="text-sm font-bold text-slate-900 dark:text-white">${targetItems.length} ${targetItems.length === 1 ? 'item' : 'itens'}</p>
+          <p class="text-base font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">${formatBRL(avgTicket)}</p>
+        </div>
+      `;
+
+      // Gráfico de Barras Horizontais
+      if (totalSpent === 0) {
+        chartContainer.innerHTML = `
+          <p class="py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+            Informe o preço dos itens na lista para gerar o gráfico de distribuição por categoria.
+          </p>
+        `;
+        return;
+      }
+
+      chartContainer.innerHTML = sortedCategories.map(({ category, amount }) => {
+        const meta = getCategoryMeta(category);
+        const pct = totalSpent > 0 ? (amount / totalSpent) * 100 : 0;
+
+        return `
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                <span>${meta.icon}</span>
+                <span>${meta.name}</span>
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium text-slate-400 dark:text-slate-500">${pct.toFixed(1)}%</span>
+                <span class="font-bold text-slate-800 dark:text-slate-100">${formatBRL(amount)}</span>
+              </div>
+            </div>
+            <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full rounded-full ${meta.color} transition-all duration-500" style="width: ${Math.max(pct, 2)}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**
+     * ==================== ABA 3: HISTÓRICO ====================
+     */
+    function toggleHistoryExpand(id) {
+      if (ui.expandedHistoryIds.has(id)) {
+        ui.expandedHistoryIds.delete(id);
+      } else {
+        ui.expandedHistoryIds.add(id);
+      }
+      renderHistory();
+    }
+
+    function reuseHistoryList(id) {
+      const entry = state.history.find(h => h.id === id);
+      if (!entry) return;
+
+      const newItems = entry.items.map((item, idx) => ({
+        id: generateId() + idx,
+        name: item.name,
+        category: item.category || 'Outros',
+        quantity: item.quantity || 1,
+        unit: item.unit || 'un',
+        unitPrice: item.unitPrice || 0,
+        checked: false,
+        createdAt: Date.now() - idx
+      }));
+
+      state.items = [...newItems, ...state.items];
+      saveState();
+      showToast(`${newItems.length} itens enviados para a Lista Atual!`);
+      switchTab('lista');
+    }
+
+    function askDeleteHistory(id) {
+      openConfirmModal(
+        'Excluir do Histórico',
+        'Tem certeza que deseja remover esta compra do seu histórico? Esta ação não pode ser desfeita.',
+        () => {
+          state.history = state.history.filter(h => h.id !== id);
+          ui.expandedHistoryIds.delete(id);
+          saveState();
+          renderHistory();
+          showToast('Compra removida do histórico.');
+        }
+      );
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyListContainer');
+      const countBadge = document.getElementById('historyCountBadge');
+      countBadge.textContent = `${state.history.length} ${state.history.length === 1 ? 'compra' : 'compras'}`;
+
+      if (state.history.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-8 text-center border border-dashed border-slate-300 dark:border-slate-700 space-y-2">
+            <div class="text-3xl">🧾</div>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Nenhuma compra finalizada ainda</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+              Quando concluir uma compra na aba "Lista Atual", clique em "Finalizar Compra" para registrá-la aqui.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.history.map(entry => {
+        const isExpanded = ui.expandedHistoryIds.has(entry.id);
+
+        const itemsRows = entry.items.map(item => {
+          const meta = getCategoryMeta(item.category);
+          return `
+            <div class="flex items-center justify-between py-2 text-xs sm:text-sm gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span>${meta.icon}</span>
+                <span class="font-medium text-slate-700 dark:text-slate-200 truncate">${escapeHTML(item.name)}</span>
+                <span class="text-xs text-slate-400 shrink-0">(${formatQty(item.quantity)} ${escapeHTML(item.unit)})</span>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="font-semibold text-slate-800 dark:text-slate-100">${formatBRL(item.quantity * item.unitPrice)}</span>
+                ${item.unitPrice > 0 ? `<span class="block text-[10px] text-slate-400">${formatBRL(item.unitPrice)}/${escapeHTML(item.unit)}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-soft border border-slate-200/70 dark:border-slate-800 overflow-hidden">
+            <button onclick="toggleHistoryExpand('${entry.id}')" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">${escapeHTML(entry.storeName)}</h3>
+                  <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0">
+                    ${formatDateBR(entry.date)}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  ${entry.itemCount} ${entry.itemCount === 1 ? 'item comprado' : 'itens comprados'}
+                </p>
+              </div>
+
+              <div class="flex items-center gap-3 shrink-0">
+                <span class="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                  ${formatBRL(entry.totalSpent)}
+                </span>
+                <svg class="w-5 h-5 text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+
+            ${isExpanded ? `
+              <div class="px-4 pb-4 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-3 bg-slate-50/40 dark:bg-slate-900/50">
+                <div class="divide-y divide-slate-100 dark:divide-slate-800/70 max-h-72 overflow-y-auto pr-1">
+                  ${itemsRows}
+                </div>
+
+                <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                  <button onclick="askDeleteHistory('${entry.id}')" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors">
+                    Excluir
+                  </button>
+                  <button onclick="reuseHistoryList('${entry.id}')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reutilizar Lista
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**
+     * Controle de Modais e Notificações Toast
+     */
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+    }
+
+    function openConfirmModal(title, message, onConfirm) {
+      document.getElementById('confirmModalTitle').textContent = title;
+      document.getElementById('confirmModalMessage').textContent = message;
+      const actionBtn = document.getElementById('confirmModalActionBtn');
+
+      // Remove listeners antigos clonando o botão
+      const newBtn = actionBtn.cloneNode(true);
+      actionBtn.parentNode.replaceChild(newBtn, actionBtn);
+      newBtn.addEventListener('click', () => {
+        closeModal('confirmModal');
+        onConfirm();
+      });
+
+      openModal('confirmModal');
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+
+      const colors = type === 'error'
+        ? 'bg-rose-600 text-white'
+        : type === 'info'
+          ? 'bg-slate-800 text-white dark:bg-slate-700'
+          : 'bg-emerald-600 text-white';
+
+      toast.className = `${colors} px-4 py-2.5 rounded-xl shadow-lg text-xs sm:text-sm font-semibold pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 max-w-xs sm:max-w-sm text-center`;
+      toast.textContent = message;
+
+      container.appendChild(toast);
+
+      // Animação de entrada
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      // Remoção automática
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    }
+
+    // Fecha modais ao clicar no fundo escuro ou pressionar ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        ['budgetModal', 'editItemModal', 'finishPurchaseModal', 'confirmModal'].forEach(closeModal);
+      }
+    });
+
+    ['budgetModal', 'editItemModal', 'finishPurchaseModal', 'confirmModal'].forEach(modalId => {
+      document.getElementById(modalId).addEventListener('click', (e) => {
+        if (e.target.id === modalId) closeModal(modalId);
+      });
+    });
+
+    /**
+     * Inicialização da Aplicação
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      populateCategorySelects();
+      loadState();
+      updateStatusFilterButtons();
+      switchTab('lista');
+    });
+  </script>
+</body>
+</html>
